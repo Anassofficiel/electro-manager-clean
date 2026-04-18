@@ -5,7 +5,6 @@ import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 
 const app = express();
-const httpServer = createServer(app);
 
 declare module "http" {
   interface IncomingMessage {
@@ -94,15 +93,19 @@ app.use((req, res, next) => {
   next();
 });
 
+let isBootstrapped = false;
+
 async function bootstrap() {
-  // CORS فقط للـ API
+  if (isBootstrapped) return;
+  isBootstrapped = true;
+
   app.use("/api", apiCors);
 
-  // health check
   app.get("/healthz", (_req, res) => {
     res.status(200).send("ok");
   });
 
+  const httpServer = createServer(app);
   await registerRoutes(httpServer, app);
 
   if (process.env.NODE_ENV === "production") {
@@ -122,15 +125,22 @@ async function bootstrap() {
 
     res.status(status).json({ message });
   });
-
-  const port = Number(process.env.PORT || 10000);
-
-  httpServer.listen(port, "0.0.0.0", () => {
-    log(`serving on port ${port}`);
-  });
 }
 
-bootstrap().catch((err) => {
-  console.error("[bootstrap error]", err);
-  process.exit(1);
-});
+if (process.env.VERCEL !== "1") {
+  bootstrap()
+    .then(() => {
+      const port = Number(process.env.PORT || 10000);
+      app.listen(port, "0.0.0.0", () => {
+        log(`serving on port ${port}`);
+      });
+    })
+    .catch((err) => {
+      console.error("[bootstrap error]", err);
+      process.exit(1);
+    });
+} else {
+  bootstrap();
+}
+
+export default app;
