@@ -14,6 +14,7 @@ import ProductsList from "./pages/products/index";
 import ProductForm from "./pages/products/form";
 import OrdersList from "./pages/orders/index";
 import NewOrderPage from "./pages/orders/new";
+import PrintOrderPage from "./pages/orders/print";
 import CustomersList from "./pages/customers/index";
 import Analytics from "./pages/analytics/index";
 import SettingsPage from "./pages/settings/index";
@@ -117,6 +118,10 @@ function Router() {
 
       <Route path="/admin/orders/new">
         {() => <ProtectedRoute component={NewOrderPage} />}
+      </Route>
+
+      <Route path="/admin/orders/print/:id">
+        {() => <ProtectedRoute component={PrintOrderPage} />}
       </Route>
 
       <Route path="/admin/products">

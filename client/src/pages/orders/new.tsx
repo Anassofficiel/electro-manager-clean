@@ -177,9 +177,7 @@ function SettingRow({
             {(description || descriptionAr) && (
                 <p className="text-xs text-slate-500 leading-relaxed">
                     {description && <span>{description}</span>}
-                    {descriptionAr && (
-                        <span className="text-slate-400"> — {descriptionAr}</span>
-                    )}
+                    {descriptionAr && <span className="text-slate-400"> — {descriptionAr}</span>}
                 </p>
             )}
             <div>{children}</div>
@@ -210,12 +208,12 @@ export default function NewOrderPage() {
     );
 
     const total = Math.max(subtotal + Number(shipping || 0) - Number(discount || 0), 0);
-
     const phoneValid = customerPhone.length === 10;
 
     const addProduct = (productId: string) => {
         const product = (products || []).find((p: any) => String(p.id) === productId);
         if (!product) return;
+
         const existing = items.find((item) => item.productId === productId);
         if (existing) {
             setItems((prev) =>
@@ -225,6 +223,7 @@ export default function NewOrderPage() {
             );
             return;
         }
+
         setItems((prev) => [
             ...prev,
             {
@@ -287,10 +286,13 @@ export default function NewOrderPage() {
             },
             {
                 onSuccess: (created: any) => {
-                    if (printAfterSave) {
-                        setLocation(`/admin/orders?print=${created?.id || ""}`);
+                    const orderId = created?.id;
+
+                    if (printAfterSave && orderId) {
+                        setLocation(`/admin/orders/print/${orderId}`);
                         return;
                     }
+
                     setLocation("/admin/orders");
                 },
             }
@@ -311,12 +313,12 @@ export default function NewOrderPage() {
     return (
         <AdminLayout>
             <div className="space-y-5 pb-12 max-w-7xl mx-auto">
-                {/* ── Header ── */}
                 <div className="relative overflow-hidden rounded-2xl border border-indigo-100 bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 p-6 shadow-lg shadow-indigo-200">
-                    <div className="absolute inset-0 opacity-10"
+                    <div
+                        className="absolute inset-0 opacity-10"
                         style={{
-                            backgroundImage: `radial-gradient(circle at 20% 50%, white 1px, transparent 1px),
-                                             radial-gradient(circle at 80% 20%, white 1px, transparent 1px)`,
+                            backgroundImage:
+                                "radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)",
                             backgroundSize: "40px 40px",
                         }}
                     />
@@ -343,10 +345,7 @@ export default function NewOrderPage() {
                 </div>
 
                 <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
-                    {/* ── Left column ── */}
                     <div className="xl:col-span-2 space-y-5">
-
-                        {/* Customer Info */}
                         <SectionCard icon={User} title="Customer Information" titleAr="معلومات الزبون" accent="indigo">
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div>
@@ -386,7 +385,6 @@ export default function NewOrderPage() {
                             </div>
                         </SectionCard>
 
-                        {/* Order Items */}
                         <SectionCard icon={Package} title="Order Items" titleAr="منتجات الطلب" accent="violet">
                             <div className="mb-4">
                                 <FieldLabel en="Add Product" ar="إضافة منتج" icon={ShoppingCart} />
@@ -424,6 +422,7 @@ export default function NewOrderPage() {
                                                     className="w-12 h-12 rounded-xl object-cover border border-slate-200 shrink-0"
                                                 />
                                             )}
+
                                             <div className="flex-1 min-w-0">
                                                 <p className="font-black text-slate-800 truncate text-sm">{item.title}</p>
                                                 <p className="text-xs text-violet-600 font-semibold mt-0.5">
@@ -449,7 +448,9 @@ export default function NewOrderPage() {
                                                         type="number"
                                                         min={0}
                                                         value={item.price}
-                                                        onChange={(e) => updatePrice(item.productId, Number(e.target.value || 0))}
+                                                        onChange={(e) =>
+                                                            updatePrice(item.productId, Number(e.target.value || 0))
+                                                        }
                                                         className="w-28 rounded-xl border-2 border-slate-200 text-center h-9 text-sm font-bold"
                                                     />
                                                 </div>
@@ -474,12 +475,9 @@ export default function NewOrderPage() {
                         </SectionCard>
                     </div>
 
-                    {/* ── Right column ── */}
                     <div className="space-y-5">
-                        {/* Order Settings */}
                         <SectionCard icon={ShoppingCart} title="Order Settings" titleAr="إعدادات الطلب" accent="emerald">
                             <div className="space-y-3">
-
                                 <SettingRow
                                     label="Order Status"
                                     labelAr="حالة الطلب"
@@ -558,7 +556,9 @@ export default function NewOrderPage() {
                                             onChange={(e) => setShipping(Number(e.target.value || 0))}
                                             className="rounded-xl border-2 border-slate-200 h-10 bg-white text-sm pr-10"
                                         />
-                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">dh</span>
+                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">
+                                            dh
+                                        </span>
                                     </div>
                                 </SettingRow>
 
@@ -578,7 +578,9 @@ export default function NewOrderPage() {
                                             onChange={(e) => setDiscount(Number(e.target.value || 0))}
                                             className="rounded-xl border-2 border-slate-200 h-10 bg-white text-sm pr-10"
                                         />
-                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">dh</span>
+                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">
+                                            dh
+                                        </span>
                                     </div>
                                 </SettingRow>
 
@@ -599,7 +601,6 @@ export default function NewOrderPage() {
                             </div>
                         </SectionCard>
 
-                        {/* Summary */}
                         <div className="rounded-2xl border-2 border-slate-100 bg-white p-5 shadow-sm">
                             <h2 className="mb-4 font-black text-slate-800 flex items-center gap-2">
                                 <div className="w-5 h-5 rounded bg-indigo-100 flex items-center justify-center">
@@ -615,15 +616,21 @@ export default function NewOrderPage() {
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-slate-500">Shipping / التوصيل</span>
-                                    <span className="font-bold text-blue-600">+{Number(shipping || 0).toLocaleString()} dh</span>
+                                    <span className="font-bold text-blue-600">
+                                        +{Number(shipping || 0).toLocaleString()} dh
+                                    </span>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-slate-500">Discount / التخفيض</span>
-                                    <span className="font-bold text-emerald-600">-{Number(discount || 0).toLocaleString()} dh</span>
+                                    <span className="font-bold text-emerald-600">
+                                        -{Number(discount || 0).toLocaleString()} dh
+                                    </span>
                                 </div>
                                 <div className="flex justify-between items-center border-t-2 border-slate-100 pt-3 mt-2">
                                     <span className="font-black text-slate-800 text-base">Total / المجموع</span>
-                                    <span className="font-black text-xl text-indigo-600">{total.toLocaleString()} dh</span>
+                                    <span className="font-black text-xl text-indigo-600">
+                                        {total.toLocaleString()} dh
+                                    </span>
                                 </div>
                             </div>
 
@@ -633,7 +640,9 @@ export default function NewOrderPage() {
                                     <p className="text-xs text-amber-700 leading-relaxed">
                                         Fill all required fields and add at least one product.
                                         <br />
-                                        <span className="text-amber-600">أكمل جميع الحقول الإلزامية وأضف منتجا واحدا على الأقل.</span>
+                                        <span className="text-amber-600">
+                                            أكمل جميع الحقول الإلزامية وأضف منتجا واحدا على الأقل.
+                                        </span>
                                     </p>
                                 </div>
                             )}
