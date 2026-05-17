@@ -19,6 +19,7 @@ const allowedOrigins = [
   "https://electro-manager.vercel.app",
   "https://veneziaelectro.vercel.app",
   "https://electro-manager-dashboard.onrender.com",
+  "https://electro-moustafa-dashboard.onrender.com",
 ];
 
 const apiCors = cors({
