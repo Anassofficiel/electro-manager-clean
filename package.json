@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "cross-env NODE_ENV=development PORT=5001 npx tsx server/index.ts",
-    "build": "NODE_ENV=production npx tsx ./script/build.ts",
+    "build": "npx tsx ./script/build.ts",
     "start": "NODE_ENV=production node dist/index.cjs"
   },
   "dependencies": {
