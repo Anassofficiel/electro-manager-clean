@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development PORT=5001 npx tsx server/index.ts",
     "build": "npx tsx ./script/build.ts",
-    "start": "NODE_ENV=production node dist/index.cjs"
+    "start": "NODE_ENV=production node dist/index.cjs",
+    "postinstall": "npm install esbuild"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
